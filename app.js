@@ -24,6 +24,7 @@ const articleSchema = {
 // Create a Model
 const Article = mongoose.model("Article", articleSchema);
 
+// Getting all articles
 app
   .route("/articles")
   .get(function (req, res) {
@@ -48,6 +49,32 @@ app
         res.send("Successfully deleted all articles.");
       } else {
         res.send(err);
+      }
+    });
+  });
+
+// Getting a specific article
+app
+  .route("/articles/:articleTitle")
+  .get(function (req, res) {
+    Article.findOne({ title: req.params.articleTitle }).then(function (
+      foundArticle
+    ) {
+      if (foundArticle) {
+        res.send(foundArticle);
+      } else {
+        res.send("No articles matching that title was found.");
+      }
+    });
+  })
+  .put(function (req, res) {
+    Article.findOneAndUpdate(
+      { title: req.params.articleTitle },
+      { title: req.body.title, content: req.body.content },
+      { overwrite: true }
+    ).then(function (err) {
+      if (!err) {
+        res.send("Successfully updated article.");
       }
     });
   });
