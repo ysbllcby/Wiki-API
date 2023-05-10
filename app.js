@@ -77,6 +77,28 @@ app
         res.send("Successfully updated article.");
       }
     });
+  })
+  .patch(function (req, res) {
+    modifyOne();
+    async function modifyOne() {
+      try {
+        await Article.updateOne(
+          { title: req.params.articleTitle },
+          { $set: req.body }
+        ).then(res.send("Successfully updated article"));
+      } catch (err) {
+        console.log(err);
+      }
+    }
+  })
+  .delete(function (req, res) {
+    Article.deleteOne({ title: req.params.articleTitle }).then(function (err) {
+      if (!err) {
+        res.send("Successfully deleted article.");
+      } else {
+        res.send(err);
+      }
+    });
   });
 
 app.listen(3000, function () {
